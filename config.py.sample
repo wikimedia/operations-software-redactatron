@@ -1,0 +1,6 @@
+import web
+# the redactatron db
+DB = web.database(dbn='mysql', db='', user='redactatron')
+# the mediawiki db
+WikiDB = web.database(dbn='mysql', db='enwiki', user='wikireadonly', host='dbhost')
+cache = False

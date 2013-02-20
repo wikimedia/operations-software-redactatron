@@ -1,0 +1,27 @@
+$def with (menu, page, title=None)
+<html><head>
+<title>redactatron 3000\
+$if title: : $title\
+</title>
+<!-- DataTables CSS -->
+<link rel="stylesheet" type="text/css" href="https://ajax.aspnetcdn.com/ajax/jquery.dataTables/1.9.4/css/jquery.dataTables.css">
+<!-- jQuery -->
+<script type="text/javascript" charset="utf8" src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.8.2.min.js"></script>
+<script type="text/javascript" charset="utf8" src="https://ajax.aspnetcdn.com/ajax/jquery.ui/1.8.22/jquery-ui.js"></script>
+<link rel="stylesheet" type="text/css" href="https://ajax.aspnetcdn.com/ajax/jquery.ui/1.8.10/themes/cupertino/jquery-ui.css">
+<!-- DataTables -->
+<script type="text/javascript" charset="utf8" src="https://ajax.aspnetcdn.com/ajax/jquery.dataTables/1.9.4/jquery.dataTables.min.js"></script>
+</head><body>
+<div style="width:100%;">
+<div style="width:86%; margin: 0px auto;">
+$#<h1><a href="/">enwiki schema redactor</a></h1>
+<div id="top">
+    <div style="float:left;"><h1>[[enwiki schema redactor]]</h1></div>
+    <div style="float:right;"><h1>data for the ████ masses</h1></div>
+</div>
+<div style="clear: both;"></div>
+$:menu
+$:page
+</div></div>
+</body></html>
+

@@ -1,0 +1,114 @@
+$def with (schema, tables, review)
+
+<script type="text/javascript" charset="utf-8">
+    $$.fn.dataTableExt.afnSortData['dom-select'] = function (oSettings, iColumn)
+    {
+            var aData = [];
+                $$('td:eq('+iColumn+') select', oSettings.oApi._fnGetTrNodes(oSettings)).each(
+                    function () {
+                            aData.push($$(this).val());
+                    });
+                    return aData;
+    };
+
+    var oTable;
+
+    $$(document).ready(function() {
+        $$('#schema').dataTable({
+            "iDisplayLength": 25,
+            "aoColumnDefs": [
+                { "sSortDataType": "dom-select", "aTargets": [ 3 ] },
+            ]
+        });
+
+        $$('#dialog').dialog({
+            autoOpen: false,
+            show: 'fade',
+            hide: 'puff',
+            height:120,
+            draggable: false,
+            modal: true,
+            dialogClass: 'alert',
+            position: ['center', 50]
+        });  $#.siblings('.ui-dialog-titlebar').remove();
+
+        $$('#form').submit(function() {
+            var sData = oTable.$$('select').serialize();
+            $$.post("/review", sData)
+            .done(function() {
+                $$("#dialog").empty().html("<p>Review Saved</p>").dialog('open');
+                setTimeout(function(){$$("#dialog").dialog('close')},1000);
+            })
+            .fail(function() {
+                $$("#dialog").empty().html("<p>Error: Post Failed</p>").dialog('open');
+            });
+            return false;
+        });
+        oTable = $$('#schema').dataTable();
+    });
+
+</script>
+
+<div id="dialog" title="Notice"><p>fail</p></div>
+
+<div class="schema">
+<form id="form" method="post">
+    $#<input type="hidden" name="csrf_token" value="$csrf_token()"/>
+    <div style="text-align:right; padding-bottom:1em;">
+        <button type="submit">Save</button>
+    </div>
+<table cellpadding="0" cellspacing="0" border="0" class="display" id="schema">
+<thead>
+    <tr>
+        <th>Table</th>
+        <th>Column</th>
+        <th>Type</th>
+        <th>Status</th>
+    </tr>
+</thead>
+<tbody>
+$#for table in ['abuse_filter', 'user']:
+$for table in tables:
+    $for column in schema[table]:
+        <tr class="$table">
+            <td>$table</td>
+            <td>$column</td>
+            <td>$schema[table][column]</td>
+            <td>
+                $code:
+                    if review[table][column]:
+                        val = review[table][column]
+                    else:
+                        val = 0
+                <select name="${table}.${column}">
+                    <option value="0"
+                    $if val == 0:
+                        selected
+                    ></option>
+                    <option value="1"
+                    $if val == 1:
+                        selected
+                    >Allow</option>
+                    <option value="2"
+                    $if val == 2:
+                        selected
+                    >Hide</option>
+                </select>
+            </td>
+        </tr>
+</tbody>
+<tfoot>
+    <tr>
+        <th>Table</th>
+        <th>Column</th>
+        <th>Type</th>
+        <th>Status</th>
+    </tr>
+</tfoot>
+</table>
+</div>
+<div style="clear: both;"></div>
+<div style="text-align:right; padding-bottom:1em; padding-top:1em;">
+    <button type="submit">Save</button>
+</div>
+</form>

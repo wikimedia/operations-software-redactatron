@@ -1,0 +1,82 @@
+$def with (redactions)
+
+<script type="text/javascript" charset="utf-8">
+    $$(document).ready(function() {
+        $$('#schema').dataTable({
+            "iDisplayLength": 25,
+        });
+
+        $$('#dialog').dialog({
+            autoOpen: false,
+            show: 'fade',
+            hide: 'puff',
+            height:120,
+            draggable: false,
+            modal: true,
+            dialogClass: 'alert',
+            position: ['center', 50]
+        });  $#.siblings('.ui-dialog-titlebar').remove();
+
+        $$('#form').submit(function() {
+            var sData = oTable.$$('input').serialize();
+            $$.post("/redacted", sData)
+            .done(function() {
+                $$("#dialog").empty().html("<p>Redaction Details Saved</p>").dialog('open');
+                setTimeout(function(){$$("#dialog").dialog('close')},1000);
+            })
+            .fail(function() {
+                $$("#dialog").empty().html("<p>Error: Post Failed</p>").dialog('open');
+            });
+            return false;
+        });
+        oTable = $$('#schema').dataTable();
+    });
+
+</script>
+
+<div id="dialog" title="Notice"><p>fail</p></div>
+
+<div class="schema">
+<form id="form" method="post">
+    $#<input type="hidden" name="csrf_token" value="$csrf_token()"/>
+    <div style="text-align:right; padding-bottom:1em;">
+        <button type="submit">Save</button>
+    </div>
+<table cellpadding="0" cellspacing="0" border="0" class="display" id="schema">
+<thead>
+    <tr>
+        <th>Table</th>
+        <th>Column</th>
+        <th>Type</th>
+        <th>Redaction</th>
+    </tr>
+</thead>
+<tbody>
+$#for table in ['abuse_filter', 'user']:
+$for table in redactions:
+    $for column in redactions[table]:
+        <tr class="$table">
+            <td>$table</td>
+            <td>$column</td>
+            <td>$redactions[table][column]['type']</td>
+            <td style="text-align:center;">
+                <input type="text" name="$table.$column" size="50"
+                maxlength="$redactions[table][column]['size']" value="$redactions[table][column]['redaction']">
+            </td>
+        </tr>
+</tbody>
+<tfoot>
+    <tr>
+        <th>Table</th>
+        <th>Column</th>
+        <th>Type</th>
+        <th>Redaction</th>
+    </tr>
+</tfoot>
+</table>
+</div>
+<div style="clear: both;"></div>
+<div style="text-align:right; padding-bottom:1em; padding-top:1em;">
+    <button type="submit">Save</button>
+</div>
+</form>

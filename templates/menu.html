@@ -1,0 +1,27 @@
+$def with (page)
+
+<script type="text/javascript" charset="utf-8">
+    $$(document).ready(function() {
+        $$("#menu").buttonset();
+        $$("#radio1").click(function() {
+            window.location = "/review";
+        });
+        $$("#radio2").click(function() {
+            window.location = "/redacted";
+        });
+    });
+</script>
+
+<form>
+    <div style="float:left;" id="menu">
+        <input type="radio" id="radio1" name="review"
+        $if page=="review":
+            checked="checked"
+        /><label for="radio1">Review Schema</label>
+        <input type="radio" id="radio2" name="redacted"
+        $if page=="redacted":
+            checked="checked"
+        /><label for="radio2">Edit Triggers</label>
+    </div>
+</form>
+
