@@ -4,9 +4,9 @@ import json
 
 def wikischema():
     s = {}
-    rows = config.WikiDB.query('SELECT table_name, column_name,
-                               substring_index(column_type, " ", 1) as
-                               data_type FROM information_schema.columns
+    rows = config.WikiDB.query('SELECT table_name, column_name, \
+                               substring_index(column_type, " ", 1) as \
+                               data_type FROM information_schema.columns \
                                WHERE table_schema="enwiki"')
     for row in rows:
         if row.table_name not in s:
@@ -18,16 +18,16 @@ def wikischema():
 def save_review(r, b):
     review = json.dumps(r)
     banned = json.dumps(b)
-    result = config.DB.query("REPLACE INTO gn_data VALUES
+    result = config.DB.query("REPLACE INTO gn_data VALUES \
                              ('enwiki_review', '%s')" % (review))
     if result:
-        result = config.DB.query("REPLACE INTO gn_data VALUES
+        result = config.DB.query("REPLACE INTO gn_data VALUES \
                                  ('enwiki_banned', '%s')" % (banned))
     return result
 
 
 def get_review():
-    result = config.DB.select('gn_data', what="gnd_value",
+    result = config.DB.select('gn_data', what="gnd_value", \
                               where="gnd_key='enwiki_review'")
     if result:
         return json.loads(result[0]['gnd_value'])
@@ -36,7 +36,7 @@ def get_review():
 
 
 def get_redact_list():
-    result = config.DB.select('gn_data', what="gnd_value",
+    result = config.DB.select('gn_data', what="gnd_value", \
                               where="gnd_key='enwiki_banned'")
     if result:
         return json.loads(result[0]['gnd_value'])
@@ -45,7 +45,7 @@ def get_redact_list():
 
 
 def get_redaction(tcol):
-    result = config.DB.select('gn_data', what="gnd_value",
+    result = config.DB.select('gn_data', what="gnd_value", \
                               where="gnd_key='%s'" % (tcol))
     if result:
         return result[0]['gnd_value']
@@ -54,6 +54,6 @@ def get_redaction(tcol):
 
 
 def save_redaction(tcol):
-    result = config.DB.query("REPLACE INTO gn_data VALUES
-                             ('%s', '%s')" % (tcol.keys()[0],
+    result = config.DB.query("REPLACE INTO gn_data VALUES \
+                             ('%s', '%s')" % (tcol.keys()[0], \
                              tcol.values()[0]))

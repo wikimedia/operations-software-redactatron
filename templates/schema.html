@@ -76,7 +76,7 @@ $for table in tables:
             <td>$schema[table][column]</td>
             <td>
                 $code:
-                    if review[table][column]:
+                    if review and review[table][column]:
                         val = review[table][column]
                     else:
                         val = 0
