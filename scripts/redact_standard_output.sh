@@ -26,9 +26,9 @@ for tbl in $(egrep ',F' cols.txt | awk -F ',' '{print $1}' | uniq); do
 
     echo "-- $tbl"
 
-    insert="CREATE TRIGGER ${db}.${tbl}_insert BEFORE INSERT ON ${db}.${tbl} FOR EACH ROW SET"
-    update="CREATE TRIGGER ${db}.${tbl}_update BEFORE UPDATE ON ${db}.${tbl} FOR EACH ROW SET"
-    remove="UPDATE ${db}.${tbl} SET"
+    insert="SET SESSION sql_log_bin = 0; CREATE DEFINER='root'@'localhost' TRIGGER ${db}.${tbl}_insert BEFORE INSERT ON ${db}.${tbl} FOR EACH ROW SET"
+    update="SET SESSION sql_log_bin = 0; CREATE DEFINER='root'@'localhost' TRIGGER ${db}.${tbl}_update BEFORE UPDATE ON ${db}.${tbl} FOR EACH ROW SET"
+    remove="SET SESSION sql_log_bin = 1; UPDATE ${db}.${tbl} SET"
 
     for col in $(egrep "${tbl},.*,F" cols.txt | awk -F ',' '{print $2}'); do
 
